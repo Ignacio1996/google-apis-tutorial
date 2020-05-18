@@ -6,8 +6,9 @@ import { createSheet } from './sheets';
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [sheetId, setSheetId] = useState(null);
 
-  const login = async () => {
+  const login = () => {
     return LoginWithGoogle()
       .then((result) => {
         var token = result.credential.accessToken;
@@ -23,18 +24,21 @@ function App() {
       });
   };
 
-  const getDriveFiles = async () => {
+  const getDriveFiles = () => {
     return getFiles(token)
       .then((response) => response.json())
       .then((files) => console.log("App.js | files", files));
   };
 
-  const createNewSheet = async (fileName) => {
-    const duplicatesLength = await checkForDuplicates();
-    if (duplicatesLength > 0) {
-      console.log("App.js | Duplicates exist! Do not create spreadsheet");
+  const createOrSetSheet = async (fileName) => {
+    const duplicates = await checkForDuplicates();
+    console.log("duplicates", duplicates);
+    
+    if (duplicates.length > 0) {
+      console.log("Duplicates exist! Do not create spreadsheet and set current sheetId", duplicates[0].id);
+      setSheetId(duplicates[0].id)
     } else {
-      console.log("App.js | duplicates do not exist, create new sheet");
+      console.log("duplicates do not exist, create new sheet");
       return createSheet(token, fileName)
         .then(() => {
           console.log("App.js | sheet created!");
@@ -48,7 +52,7 @@ function App() {
   const checkForDuplicates = async () => {
     const request = await getFilesByName(token, "My Sheet 1");
     const data = await request.json();
-    return data.files.length;
+    return data.files;
   }
 
   if (user === null) {
@@ -65,7 +69,7 @@ function App() {
         <p>User: {user.email}</p>
         <p>Token: {token}</p>
         <button onClick={() => getDriveFiles()}>Get Files from Drive</button>
-        <button onClick={() => createNewSheet("My Sheet 1")}>Create Spreadsheet</button>
+        <button onClick={() => createOrSetSheet("My Sheet 1")}>Create Spreadsheet</button>
       </div>
     );
   }
