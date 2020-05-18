@@ -51,7 +51,7 @@ function App() {
     }
   };
 
-  const updateSheetData =()=>{
+  const updateSheetData = () => {
     
   }
 
