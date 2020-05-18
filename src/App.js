@@ -8,7 +8,7 @@ function App() {
   const [token, setToken] = useState(null);
   const [sheetId, setSheetId] = useState(null);
 
-  const login = () => {
+  const login = async () => {
     return LoginWithGoogle()
       .then((result) => {
         var token = result.credential.accessToken;
@@ -33,15 +33,17 @@ function App() {
   const createOrSetSheet = async (fileName) => {
     const duplicates = await checkForDuplicates();
     console.log("duplicates", duplicates);
-    
+
     if (duplicates.length > 0) {
       console.log("Duplicates exist! Do not create spreadsheet and set current sheetId", duplicates[0].id);
       setSheetId(duplicates[0].id)
     } else {
       console.log("duplicates do not exist, create new sheet");
       return createSheet(token, fileName)
-        .then(() => {
-          console.log("App.js | sheet created!");
+        .then((response) => response.json())
+        .then(sheet => {
+          console.log("Sucessfully created and set sheetID for usage");
+          setSheetId(sheet.spreadsheetId);
         })
         .catch((error) => {
           console.log("App.js | ", "ERROR creating sheet", error);
@@ -50,7 +52,7 @@ function App() {
   };
 
   const checkForDuplicates = async () => {
-    const request = await getFilesByName(token, "My Sheet 1");
+    const request = await getFilesByName(token, "My Sheet 4");
     const data = await request.json();
     return data.files;
   }
@@ -69,7 +71,7 @@ function App() {
         <p>User: {user.email}</p>
         <p>Token: {token}</p>
         <button onClick={() => getDriveFiles()}>Get Files from Drive</button>
-        <button onClick={() => createOrSetSheet("My Sheet 1")}>Create Spreadsheet</button>
+        <button onClick={() => createOrSetSheet("My Sheet 3")}>Create Spreadsheet</button>
       </div>
     );
   }
