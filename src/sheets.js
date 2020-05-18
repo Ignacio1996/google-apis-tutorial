@@ -11,3 +11,7 @@ export const createSheet = (token, title) => {
     }),
   });
 };
+
+const setSheetCell =()=>{
+  return fetch("https://sheets.googleapis.com/v4/spreadsheets")
+}

@@ -52,7 +52,7 @@ function App() {
   };
 
   const checkForDuplicates = async () => {
-    const request = await getFilesByName(token, "My Sheet 4");
+    const request = await getFilesByName(token, "My Sheet 3");
     const data = await request.json();
     return data.files;
   }
