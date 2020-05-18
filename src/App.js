@@ -51,6 +51,10 @@ function App() {
     }
   };
 
+  const updateSheetData =()=>{
+    
+  }
+
   const checkForDuplicates = async () => {
     const request = await getFilesByName(token, "My Sheet 3");
     const data = await request.json();
@@ -72,6 +76,7 @@ function App() {
         <p>Token: {token}</p>
         <button onClick={() => getDriveFiles()}>Get Files from Drive</button>
         <button onClick={() => createOrSetSheet("My Sheet 3")}>Create Spreadsheet</button>
+        <button onClick={() => updateSheetData()}>Update Sheet Data</button>
       </div>
     );
   }
